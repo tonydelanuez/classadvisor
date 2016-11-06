@@ -1,0 +1,252 @@
+<html>
+<head>
+	<title> Schoolr</title>
+	<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.10/angular.min.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
+	<script src="/javascripts/angularApp.js"></script>
+	<style> .glyphicon-thumbs-up {cursor:pointer } </style>
+	<style> .glyphicon-thumbs-down {cursor:pointer } </style>
+</head>
+
+<body ng-app="classadvisor">
+	<nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
+		<ul class="nav navbar-nav">
+			<li><a href="/#/home">Home</a></li>
+			<li ng-show="isLoggedIn()"><a>{{ currentUser() }}</a></li>
+			<li ng-show="isLoggedIn()"><a href="" ng-click="logOut()">Log Out</a></li>
+			<li ng-hide="isLoggedIn()"><a href="/#/login">Log In</a></li>
+			<li ng-hide="isLoggedIn()"><a href="/#/register">Register</a></li>
+		</ul>
+	</nav>
+
+	<body ng-app="classadvisor">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+				<ui-view></ui-view>
+			</div>
+
+		</div>
+
+		<script type="text/ng-template" id="/register.html">
+			<div class="page-header">
+				<h1>WUSTL ENGINEERING CLASS ADVISOR</h1>
+			</div>
+
+			<div ng-show="error" class="alert alert-danger row">
+				<span>{{ error.message }}</span>
+			</div>
+
+			<form ng-submit="register()"
+			style="margin-top:30px;">
+			<h3>Register</h3>
+
+			<div class="form-group">
+				<input type="text"
+				class="form-control"
+				placeholder="Username"
+				ng-model="user.username"></input>
+			</div>
+			<div class="form-group">
+				<input type="password"
+				class="form-control"
+				placeholder="Password"
+				ng-model="user.password"></input>
+			</div>
+			<button type="submit" class="btn btn-primary">Register</button>
+		</form>
+	</script>
+
+	<script type="text/ng-template" id="/login.html">
+		<div class="page-header">
+			<h1>Flapper News</h1>
+		</div>
+
+		<div ng-show="error" class="alert alert-danger row">
+			<span>{{ error.message }}</span>
+		</div>
+
+		<form ng-submit="logIn()"
+		style="margin-top:30px;">
+		<h3>Log In</h3>
+
+		<div class="form-group">
+			<input type="text"
+			class="form-control"
+			placeholder="Username"
+			ng-model="user.username"></input>
+		</div>
+		<div class="form-group">
+			<input type="password"
+			class="form-control"
+			placeholder="Password"
+			ng-model="user.password"></input>
+		</div>
+		<button type="submit" class="btn btn-primary">Log In</button>
+	</form>
+</script>
+
+<script type="text/ng-template" id="/home.html">
+	<div class="page-header">
+		<h1>Class Advisor</h1>
+	</div>
+	<div>
+		<p> Welcome to Class Advisor. Class advisor is a tool meant to connect WUSTL engineering students and provide them with a way to get advice for class registration. Feel free to ask questions about your tentative schedule, or share the classes you've taken and why you feel they've benefited you. 
+		</p>
+		<h3> General Guideline </h3>
+		<p> Include some information about your career goals and experience, then list the classes you're taking. If you want, you can just upload a screenshot of your schedule to <a href="http://imgur.com">imgur</a> and include the link in the new post box!</p>
+		<h5> Example </h5>
+		<p> My name is John Doe, I'm a senior CS major looking for a career in web development. Prior to this semester, I was primarily self-taught so I'd like to take a class or two in technologies that will help me with webdev and programming in general. I'm also really into video games so I figured gamedev would be a great route too! My schedule for Spring 2016 looks like: </p>
+		<ul>
+			<li>CSE 347 Analysis of Algorithms</li>
+			<li>CSE 503N Rapid Prototype Development</li>
+			<li>CSE 450A Video Game Development</li>
+			<li>CSE 514 Data Mining</li>
+			<li>CSE 438S iOS Development</li>
+		</ul>
+		<p> I've already taken the intro programming classes, 247, and computer architecture, and my program involves only CS classes (no more general education) so my experience may be a bit different than yours.</p>
+		<!-- <a href="schedules"><button class="btn btn-primary">Schedule Discussion</button></a> -->
+		<a href="courses"><button class="btn btn-primary">Class Discussion</button></a>
+
+
+	</div>
+	<div ng-repeat="post in posts | orderBy: '-upvotes' ">
+
+		<span class="glyphicon glyphicon-thumbs-up" ng-click="incrementUpvotes(post)"></span>
+		<span class="glyphicon glyphicon-thumbs-down" ng-click="decrementUpvotes(post)"></span>	
+		
+		 {{post.upvotes}} 
+		<span style="font-size:20px; margin-left:10px;">
+			<a ng-show="post.link" href="{{post.link}}">{{post.title}}
+			</a>
+			<span ng-hide="post.link">
+				{{post.title}}
+			</span>
+			<br>
+			<span ng-show="post.description">
+				Description:
+				<br>
+				<a>{{post.description}}</a> 
+			</span>
+			<br>
+			<span ng-show="post.author">
+				posted by <a>{{post.author}}</a> |
+			</span>
+			<span ng-show="post.major">
+				Major: <a>{{post.major}}</a> |
+			</span>
+			<span ng-show="post.courses">
+				Courses: <a>{{post.courses[0]}}</a> |
+			</span>
+
+		</span>
+		<br>
+		<span>
+			<a href="#/posts/{{post._id}}">View Post</a>
+		</span>
+		<span>
+<!--   <a href="#/courses/{{$index}}">Course</a> -->
+</span>
+	</div>
+
+	
+
+	<form ng-submit="addPost()" ng-show="isLoggedIn()" style="margin-top:30px;">
+		<h3>Add a new post</h3>
+		<div class="form-group">
+			<input type="text" class="form-control" placeholder="Title" ng-model="title"></input>
+		</div>
+		<div class="form-group">
+			<input type="text" class="form-control" placeholder="Link" ng-model="link"></input>
+		</div>
+		<div class="form-group">
+			<input type="text" class="form-control" placeholder="Major" ng-model="major"></input>
+		</div>
+		<div class="form-group">
+			<input type="text" class="form-control" placeholder="Description" ng-model="description"></input>
+		</div>
+		<!-- new course  -->
+<!-- 		<div class="form-group">
+			<input type="text" class="form-control" placeholder="Course 1" ng-model="course0"></input>
+		</div>
+		<div class="form-group">
+			<input type="text" class="form-control" placeholder="Course 2" ng-model="course1"></input>
+		</div>
+		<div class="form-group">
+			<input type="text" class="form-control" placeholder="Course 3" ng-model="course2"></input>
+		</div>
+		<div class="form-group">
+			<input type="text" class="form-control" placeholder="Course 4" ng-model="course3"></input>
+		</div>
+		<div class="form-group">
+			<input type="text" class="form-control" placeholder="Course 5" ng-model="course4"></input>
+		</div>
+		<div class="form-group">
+			<input type="text" class="form-control" placeholder="Course 6" ng-model="course5"></input>
+		</div> -->
+
+		
+		<button type="submit" class="btn btn-primary">Post</button>
+	</form>	
+	<div ng-hide="isLoggedIn()">
+		<h4>You need to <a href="/#/login">Log In</a> or <a href="/#/register">Register</a> before you can add a post.</h4>
+	</div>
+
+</script>
+<!-- course functionality template  -->
+<!-- <script type="text/ng-template" id="/courses.html">
+  <div class="page-header">
+    <h3>
+      <a ng-show="course.link" href="{{course.link}}">
+        {{course.title}}
+      </a>
+      <span ng-hide="course.link">
+        {{course.title}}
+      </span>
+    </h3>
+  </div>
+
+  <div ng-repeat="comment in post.comments | orderBy:'-upvotes'">
+    <span class="glyphicon glyphicon-thumbs-up"
+      ng-click="incrementUpvotes(comment)"></span>
+    {{comment.upvotes}} - by {{comment.author}}
+    <span style="font-size:20px; margin-left:10px;">
+      {{comment.body}}
+    </span>
+  </div>
+</script> -->
+<!-- posts template -->
+<script type="text/ng-template" id="/posts.html">
+	<div class="page-header">
+		<h3>
+			<a ng-show="post.link" href="{{post.link}}">
+				{{post.title}}
+			</a>
+			<span ng-hide="post.link">
+				{{post.title}}
+			</span>
+		</h3>
+	</div>
+
+	<div ng-repeat="comment in post.comments | orderBy:'-upvotes'">
+		<span class="glyphicon glyphicon-thumbs-up"
+		ng-click="incrementUpvotes(comment)"></span>
+		{{comment.upvotes}} - by {{comment.author}}
+		<span style="font-size:20px; margin-left:10px;">
+			{{comment.body}}
+		</span>
+	</div>
+	<form ng-submit="addComment()" ng-show="isLoggedIn()" style="margin-top:30px;">
+		<h3>Add a new comment</h3>
+		<div class="form-group">
+			<input type="text" class="form-control" placeholder="Comment" ng-model="body"></input>
+		</div>
+		<button type="submit" class="btn btn-primary">Post</button>
+	</form>
+    <div ng-hide="isLoggedIn()">
+	  <h4>You need to <a href="/#/login">Log In</a> or <a href="/#/register">Register</a> before you can comment.</h4>
+	</div>
+</script>	
+</body>
+</html>
