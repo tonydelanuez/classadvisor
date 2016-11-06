@@ -94,8 +94,8 @@
 	<div>
 		<p> Welcome to Class Advisor. Class advisor is a tool meant to connect WUSTL engineering students and provide them with a way to get advice for class registration. Feel free to ask questions about your tentative schedule, or share the classes you've taken and why you feel they've benefited you. 
 		</p>
-		<h3> General Guideline </h3>
-		<p> Include some information about your career goals and experience, then list the classes you're taking. If you want, you can just upload a screenshot of your schedule to <a href="http://imgur.com">imgur</a> and include the link in the new post box!</p>
+		<h3> General Guidelines </h3>
+		<p> Include some information about your career goals and experience, then list the classes you're taking. If you want, you can just upload a screenshot of your schedule to <a href="http://imgur.com">imgur</a> and include the link in the new post box! Before you start, it may help to take a look at WashU's <a href="https://engineering.wustl.edu/current-students/student-services/Pages/sample-curriculum-charts.aspx">Sample Curriculum Page</a></p>
 		<h5> Example </h5>
 		<p> My name is John Doe, I'm a senior CS major looking for a career in web development. Prior to this semester, I was primarily self-taught so I'd like to take a class or two in technologies that will help me with webdev and programming in general. I'm also really into video games so I figured gamedev would be a great route too! My schedule for Spring 2016 looks like: </p>
 		<ul>
@@ -107,8 +107,8 @@
 		</ul>
 		<p> I've already taken the intro programming classes, 247, and computer architecture, and my program involves only CS classes (no more general education) so my experience may be a bit different than yours.</p>
 		<!-- <a href="schedules"><button class="btn btn-primary">Schedule Discussion</button></a> -->
-		<a href="courses"><button class="btn btn-primary">Class Discussion</button></a>
-
+		<!-- <a href="courses"><button class="btn btn-primary">Class Discussion</button></a> -->
+	<h3> Posts </h3>
 
 	</div>
 	<div ng-repeat="post in posts | orderBy: '-upvotes' ">
@@ -117,37 +117,48 @@
 		<span class="glyphicon glyphicon-thumbs-down" ng-click="decrementUpvotes(post)"></span>	
 		
 		 {{post.upvotes}} 
-		<span style="font-size:20px; margin-left:10px;">
+		<span style="font-size:14px; margin-left:10px;">
 			<a ng-show="post.link" href="{{post.link}}">{{post.title}}
 			</a>
 			<span ng-hide="post.link">
-				{{post.title}}
+				<b>{{post.title}}</b>
 			</span>
-			<br>
-			<span ng-show="post.description">
+			
+			<!-- <span ng-show="post.description">
 				Description:
 				<br>
 				<a>{{post.description}}</a> 
-			</span>
+			</span> -->
 			<br>
 			<span ng-show="post.author">
-				posted by <a>{{post.author}}</a> |
+				posted by <a>{{post.author}}</a> 
 			</span>
+			<br>
 			<span ng-show="post.major">
-				Major: <a>{{post.major}}</a> |
+				Major: {{post.major}}
 			</span>
+			<br>
 			<span ng-show="post.courses">
-				Courses: <a>{{post.courses[0]}}</a> |
+				Courses: <br>
+				<ul class="course-list">
+				<div ng-repeat="course in post.courses | orderBy:'-upvotes'">
+				<li>{{course}}</li>
+				</div>
+				</ul>
+			</span>
 			</span>
 
 		</span>
 		<br>
 		<span>
-			<a href="#/posts/{{post._id}}">View Post</a>
+			<a href="#/posts/{{post._id}}">View Full Post With Description</a>
+			<br>
 		</span>
-		<span>
-<!--   <a href="#/courses/{{$index}}">Course</a> -->
-</span>
+<!-- 		<span>
+
+  <a href="#/courses/{{$index}}">Course</a>
+</span> -->
+<br>
 	</div>
 
 	
@@ -169,22 +180,22 @@
 		<!-- new course  -->
 <!-- 		<div class="form-group">
 			<input type="text" class="form-control" placeholder="Course 1" ng-model="course0"></input>
-		</div>
-		<div class="form-group">
-			<input type="text" class="form-control" placeholder="Course 2" ng-model="course1"></input>
-		</div>
-		<div class="form-group">
-			<input type="text" class="form-control" placeholder="Course 3" ng-model="course2"></input>
-		</div>
-		<div class="form-group">
-			<input type="text" class="form-control" placeholder="Course 4" ng-model="course3"></input>
-		</div>
-		<div class="form-group">
-			<input type="text" class="form-control" placeholder="Course 5" ng-model="course4"></input>
-		</div>
-		<div class="form-group">
-			<input type="text" class="form-control" placeholder="Course 6" ng-model="course5"></input>
 		</div> -->
+		<div class="form-group">
+			<input type="text" class="form-control" placeholder="Course 1" ng-model="course1"></input>
+		</div>
+		<div class="form-group">
+			<input type="text" class="form-control" placeholder="Course 2" ng-model="course2"></input>
+		</div>
+		<div class="form-group">
+			<input type="text" class="form-control" placeholder="Course 3" ng-model="course3"></input>
+		</div>
+		<div class="form-group">
+			<input type="text" class="form-control" placeholder="Course 4" ng-model="course4"></input>
+		</div>
+		<div class="form-group">
+			<input type="text" class="form-control" placeholder="Course 5" ng-model="course5"></input>
+		</div>
 
 		
 		<button type="submit" class="btn btn-primary">Post</button>
@@ -226,16 +237,41 @@
 			<span ng-hide="post.link">
 				{{post.title}}
 			</span>
-		</h3>
-	</div>
 
+		</h3>
+		<span ng-show="post.author">
+				posted by {{post.author}} 
+			</span>
+	</div>
+	<div class="post-body">
+		<span ng-show="post.major">
+				<h4>Major:</h4> {{post.major}}
+			</span>
+			<br>
+	<span ng-show="post.description">
+				<h4>Description:</h4>
+				<br>
+				{{post.description}}
+				<br>
+			</span>
+			<br>
+			<span ng-show="post.courses">
+			<h4>Courses: </h4>
+			
+			<div ng-repeat="course in post.courses | orderBy:'-upvotes'">
+				{{course}}
+			</span>
+	</div>
+	<br>
+	<h4>Comments:</h4>
 	<div ng-repeat="comment in post.comments | orderBy:'-upvotes'">
 		<span class="glyphicon glyphicon-thumbs-up"
 		ng-click="incrementUpvotes(comment)"></span>
 		{{comment.upvotes}} - by {{comment.author}}
-		<span style="font-size:20px; margin-left:10px;">
+		<span style="font-size:16px; margin-left:10px;">
 			{{comment.body}}
 		</span>
+
 	</div>
 	<form ng-submit="addComment()" ng-show="isLoggedIn()" style="margin-top:30px;">
 		<h3>Add a new comment</h3>

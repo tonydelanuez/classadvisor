@@ -231,8 +231,11 @@ app.controller('MainCtrl', ['$scope','posts', 'auth',
 	  		title: $scope.title,
 	  		link: $scope.link,
 	  		major: $scope.major,
-	  		course: $scope.course
+	  		course: $scope.course, 
+	  		description: $scope.description,
+	  		courses: [$scope.course1, $scope.course2, $scope.course3, $scope.course4, $scope.course5]
 	  	});
+
 	  	$scope.title = '';
 	  	$scope.link = '';
   };
